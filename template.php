@@ -4,7 +4,7 @@ function _stability_count_comments($val) {
   return isset($val['#comment']);
 }
 
-function _get_node_field($node, $field, $lang = 'en') {
+/*function _get_node_field($node, $field, $lang = 'en') {
   global $language;
   $var = FALSE;
   if(isset($node->{$field}[$lang]) && !empty($node->{$field}[$lang])) {
@@ -17,7 +17,7 @@ function _get_node_field($node, $field, $lang = 'en') {
       $var = $node->{$field};
   }
   return $var;
-}
+}*/
 
 /**
  * Implementation of hook_preprocess_html().
