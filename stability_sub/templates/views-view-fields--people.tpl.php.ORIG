@@ -25,8 +25,11 @@
  */
 ?>
 
-<?php if(isset($fields['field_image']->content)): ?>
+<?php if($logged_in == true and isset($fields['field_image']->content)): ?>
   <div class="text-center"><?php print $fields['field_image']->content; ?></div>
+<?php endif; ?>
+<?php if($logged_in == false and isset($fields['field_anonym_photo']->content)): ?>
+  <div class="text-center"><?php print $fields['field_anonym_photo']->content; ?></div>
 <?php endif; ?>
 <header class="team-head">
   <?php if(isset($fields['field_position']->content)): ?>
@@ -70,11 +73,6 @@
         <li>
             <i class="fa fa-flag"></i><?php print $fields['field_speak_languages']->content; ?></a>
         </li>
-    <?php endif; ?>
-	<?php if(isset($fields['field_phone_no']->content)): ?>
-		<li>
-  		<i class="fa fa-phone-square"></i><a href="tel:<?php print $fields['field_phone_no']->content; ?>" target="_blank"><?php print $fields['field_phone_no']->content; ?></a>
-		</li>
     <?php endif; ?>
 	</ul>
 </header>
