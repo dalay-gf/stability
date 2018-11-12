@@ -79,6 +79,10 @@ padding: 0 12px;
 margin-bottom: -4px;
 }
 
+.nav-second .flexnav > li > a {
+font-weight: bold;
+}
+
 body.sticky-header .header .flexnav > li > a {
 line-height: 54px;
 }
@@ -441,6 +445,24 @@ display: block;
 .views-exposed-form .views-exposed-widget {
 	float: none;
 }
+.webform-client-form-96969 #webform-component-phone-number, .webform-client-form-96970 #webform-component-e-mail {
+	width: 100% !important;
+}
+
+.webform-client-form-96969 .form-actions, .webform-client-form-96970 .form-actions {
+	float: unset !important;
+	display: block !important;
+	text-align: center;
+	padding-bottom: 1.4em;
+}
+
+#invite-badge {
+right: -39% !important;
+top: 0 !important;
+margin-bottom: 0 !important;
+left: unset !important;
+}
+
 }
 
 .views-widget-per-page {
@@ -483,8 +505,13 @@ z-index: 10;
 margin-top: 5px;
 }
 
-.products .product .project-desc .title {
+.product .project-desc .title {
 margin-bottom: 0.5em;
+}
+
+.view-display-id-block_landing .project-desc .title {
+margin-bottom: 1.5em !important;
+font-weight: bold;
 }
 
 .project-item .project-desc {padding: 0 20px;}
@@ -722,7 +749,7 @@ margin-top: -12px;
 font-size: 1.5em;
 }
 
-.products .product .project-desc .price .amount, .page-novelty .price .amount  {
+.products .product .project-desc .price .amount, .page-novelty .price .amount, .amount-name  {
 position: relative;
 top: -18px;
 }
@@ -1512,7 +1539,7 @@ text-align: center !important;
 left: -175px;
 top: -79px;
 position: relative;
-margin-bottom: -220px;
+margin-bottom: -100px;
 }
 
 .map-title {
@@ -1583,3 +1610,21 @@ padding-bottom: 0;
 .view-search-results .product {
 text-align:center;
 }
+
+.node-type-landing .page-heading + section {
+padding-top: 0;
+padding-bottom: 0;
+}
+
+.webform-client-form-96969 #webform-component-phone-number, .webform-client-form-96970 #webform-component-e-mail {
+	width: 80%;
+	display: inline-block;
+}
+
+.webform-client-form-96969 .form-actions, .webform-client-form-96970 .form-actions {
+	display: inline-block;
+	float: right;
+}
+
+
+

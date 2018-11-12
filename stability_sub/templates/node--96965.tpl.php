@@ -125,67 +125,74 @@
             <li class="tb-megamenu-item level-1 mega">
               <a class="tab active" id="bags-tab-header" data-toggle="tab" href="#tab-bags">Сумки</a>
             </li>
-
-            <li class="tb-megamenu-item level-1 mega">
+            
+			<li class="tb-megamenu-item level-1 mega">
               <a class="tab" id="briefcases-tab-header" data-toggle="tab" href="#tab-briefcases">Портфели</a>
             </li>
 
             <li class="tb-megamenu-item level-1 mega">
               <a class="tab" id="wallets-tab-header" data-toggle="tab" href="#tab-wallets">Кошельки</a>
             </li>
-
+            
             <li class="tb-megamenu-item level-1 mega">
               <a class="tab" id="gloves-tab-header" data-toggle="tab" href="#tab-gloves">Перчатки</a>
             </li>
-
+            
             <li class="tb-megamenu-item level-1 mega">
               <a class="tab" id="belts-tab-header" data-toggle="tab" href="#tab-belts">Ремни</a>
             </li>
-
+            
             <li class="tb-megamenu-item level-1 mega">
-              <a class="tab" id="shawls-tab-header" data-toggle="tab" href="#tab-shawls">Платки</a>
+              <a class="tab" id="accessories-tab-header" data-toggle="tab" href="#tab-accessories">Платки</a>
             </li>
-          </ul>
+
+		  </ul>
           </div>
         </nav>
       <div class="container">
         <div class="tab-content">
             <div id="tab-bags" class="tab-pane fade row in active">
               <?php
-                $bags_cat = implode('+', array(2764, 3553, 2756, 3550, 3629, 3630, 3646));
+                $bags_cat = implode('+', array(2764, 2756, 3579, 2749));
                 print views_embed_view('products', 'block_landing', $bags_cat);
               ?>
             </div>
+            
             <div id="tab-briefcases" class="tab-pane fade row">
               <?php
-                $briefcases_cat = implode('+', array(3575));
+                $briefcases_cat = implode('+', array(2748));
                 print views_embed_view('products', 'block_landing', $briefcases_cat);
               ?>
             </div>
+            
             <div id="tab-wallets" class="tab-pane fade row">
               <?php
-                $wallets_cat = implode('+', array(3606, 3607, 3608, 3579));
+                $wallets_cat = implode('+', array(2769, 2771, 2770, 2752, 2988));
                 print views_embed_view('products', 'block_landing', $wallets_cat);
               ?>
             </div>
+
             <div id="tab-gloves" class="tab-pane fade row">
               <?php
-                $gloves_cat = implode('+', array(3584, 3597));
+                $gloves_cat = implode('+', array(2755, 2943, 2767));
                 print views_embed_view('products', 'block_landing', $gloves_cat);
               ?>
             </div>
+            
             <div id="tab-belts" class="tab-pane fade row">
               <?php
-                $belts_cat = implode('+', array(3580, 3609));
+                $belts_cat = implode('+', array(2795, 2803));
                 print views_embed_view('products', 'block_landing', $belts_cat);
               ?>
             </div>
-            <div id="tab-shawls" class="tab-pane fade row">
+
+            <div id="tab-accessories" class="tab-pane fade row">
               <?php
-                $shawls_cat = implode('+',array(3601));
-                print views_embed_view('products', 'block_landing', $shawls_cat);
+                $accessories_cat = implode('+', array(3365));
+                print views_embed_view('products', 'block_landing', $accessories_cat);
               ?>
             </div>
+
           </div>
       </div>
     </section>
@@ -207,7 +214,7 @@
       </div>
     </section>
     <section class="nd-region section-light l-grey-bg v-padding-off">
-      <div class="container row">
+      <div class="container form-subscribe-me">
         <?php
         $form_subscribtion = module_invoke('webform', 'block_view','client-block-96970');
         print render($form_subscribtion['content']);

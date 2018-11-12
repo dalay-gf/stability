@@ -26,7 +26,7 @@
 <?php
 $nodeurl = url('node/' . $fields['nid']->content, array('query' => drupal_get_destination(current_path())));
 
-$base_price = round(strip_tags($fields['price']->content), 0);
+$base_price = round(intval($fields['price']->content), 0);
 ?>
 
 
@@ -36,10 +36,11 @@ $base_price = round(strip_tags($fields['price']->content), 0);
     </figure>
 
     <div class="project-desc centered">
-        <span class="price">
-          <del><span class="amount"><?php print $base_price * 2 . ' руб.'; ?></span></del>
-          <br>
-          <ins><span class="amount"><?php print $base_price . ' руб.'; ?></span></ins>
-		</span>
+	  <h4 class="title"><?php print $fields['title']->content; ?></h4>
+      <span class="price">
+        <div class="amount-name">Розничная цена:</div><span class="amount retail"><?php print '₽ ' . $base_price * 2; ?></span>
+        <br>
+        <div class="amount-name">Ваша цена:</div><ins><span class="amount"><?php print '₽ ' . $base_price; ?></span></ins>
+	  </span>
     </div>
 </div>
