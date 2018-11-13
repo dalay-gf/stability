@@ -796,6 +796,13 @@ width: 112px;
 height: 32px;
 width: 112px;
 }
+.quantity .minus, .quantity .plus {
+    width: 32px;
+    height: 32px;
+}
+.quantity.error {
+    border: 1px solid red;
+}
 
 .quantity .small-input-button {
 height: 32px;
