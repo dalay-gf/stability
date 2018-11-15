@@ -51,7 +51,9 @@ if ($price_value > 0) {
             <?php elseif ($logged_in == true and $seller_limited_access <> true): ?>
             <span class="row price">
                 <span class="amount col-md-4 col-sm-4 col-xs-3"><?php print $display_price_base; ?></span>
+                <?php if (isset($fields['addtocartlink'])): ?>
                 <div class="fau col-md-8 col-sm-8 col-xs-9"><?php print str_ireplace(t('Add to cart'), '&#xf218;', $fields['addtocartlink']->content); ?></div>
+                <?php endif; ?>
               <?php endif; ?>
             </span>
             </div>

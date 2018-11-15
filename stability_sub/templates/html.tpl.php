@@ -19,7 +19,7 @@ $browser_model = get_browser_name($_SERVER['HTTP_USER_AGENT']);
 
 
 $user_data = user_load($user->uid);
-if ($user_data->field_adaptive_design['und']) {
+if (isset($user_data->field_adaptive_design['und'])) {
   $adaptive_field = $user_data->field_adaptive_design['und'];
   } else {
 	$adaptive_field = false;
