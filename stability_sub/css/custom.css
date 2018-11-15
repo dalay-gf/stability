@@ -1633,5 +1633,14 @@ padding-bottom: 0;
 	float: right;
 }
 
+.collapsible {
+    cursor: pointer;
+    margin-right: .5rem;
+    background: url(../../../../../../misc/menu-expanded.png) 5px 65% no-repeat; /* LTR */
+    padding-left: 15px; /* LTR */
 
-
+}
+.collapsible.collapsed {
+  background-image: url(../../../../../../misc/menu-collapsed.png); /* LTR */
+  background-position: 5px 50%; /* LTR */
+}
