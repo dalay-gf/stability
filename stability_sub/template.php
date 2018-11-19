@@ -145,6 +145,7 @@ function stability_sub_preprocess_node(&$variables) {
   (user_has_role(18)) ? $is_man_sadovod = $extra_10 = TRUE : $is_man_sadovod = FALSE;
   (user_has_role(19)) ? $is_opt_sadovod = $extra_10 = TRUE : $is_opt_sadovod = FALSE;
 
+  $node = $variables['node'];
 
   $RU_CODE = "Russia";
   $CN_CODE = "China";
@@ -166,10 +167,25 @@ function stability_sub_preprocess_node(&$variables) {
   $variables['CN_CODE'] = $CN_CODE;
   $variables['current_region'] = $current_region;
   $variables['extra_10'] = $extra_10;
+  $variables['original_price'] = [
+    $RU_CODE => round($node->gf_region_prices_original['руб']),
+    $CN_CODE => round($node->gf_region_prices_original['юан'])
+  ];
+  $variables['original_currency_symbol'] = [
+    $CN_CODE => '<i class="fa fa-cny" aria-hidden="true"></i>',
+    $RU_CODE => '<i class="fa fa-rub" aria-hidden="true"></i>'
+  ];
 
 
-  if ($current_region == $RU_CODE) {$variables['current_code'] = $RU_CODE; $variables['other_code'] = $CN_CODE; $variables['other_short_code'] = $CN_CODE;} else {
-    $variables['current_code'] = $CN_CODE; $variables['other_code'] = $RU_CODE; $variables['other_short_code'] = $RU_CODE;
+  if ($current_region == $RU_CODE) {
+    $variables['current_code'] = $RU_CODE; 
+    $variables['other_code'] = $CN_CODE; 
+    $variables['other_short_code'] = $CN_CODE;
+  } 
+  else {
+    $variables['current_code'] = $CN_CODE; 
+    $variables['other_code'] = $RU_CODE; 
+    $variables['other_short_code'] = $RU_CODE;
   }
 }
 
