@@ -131,7 +131,7 @@ if ($discount_percent) {
       <?php endforeach; ?>
     </div>
     <!-- Project Slider / End -->
-    <?php if ($vote_enabled and $logged_in == true and !($seller_limited_access == true) and $is_gross == false and $is_publicator == false): ?>
+    <?php if ($vote_enabled && $logged_in && !$seller_limited_access && !$is_gross && !$is_publicator): ?>
       <div class="spacer sm"></div>
       <?php /*print render($content['field_votes']);*/?>
     <?php endif; ?>
@@ -243,7 +243,7 @@ if ($discount_percent) {
               <div class="col-xs-6">
                   <?php
                   print '<div class="buttons_added">';
-                  if($logged_in == true and !($seller_limited_access == true) and $gf_region_stock[$current_code] > 0 and isset($gf_region_prices[$current_code])) {
+                  if(user_access('create orders') && $logged_in and !($seller_limited_access == true) and $gf_region_stock[$current_code] > 0 and isset($gf_region_prices[$current_code])) {
                     print render($content['add_to_cart']);
                   } else {
                     print '<span class="fa-stack fa-2x">
