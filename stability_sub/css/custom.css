@@ -1644,3 +1644,6 @@ padding-bottom: 0;
   background-image: url(../../../../../../misc/menu-collapsed.png); /* LTR */
   background-position: 5px 50%; /* LTR */
 }
+#edit-field-country-name-und option:nth-child(2), #edit-field-country-name-und option:nth-child(3) {
+    font-weight: bold;
+}
