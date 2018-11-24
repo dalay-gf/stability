@@ -11,7 +11,7 @@
                     $searchForm = $('#views-exposed-form-products-page-5');
                 }
 
-                $block = $('#block-views-categories-block-5');
+                $block = $('#menu-categories-block');
                 $collHeader = $('.widget_categories h3', $block);
 
                 $collHeader.next().hide();
