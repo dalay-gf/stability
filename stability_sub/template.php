@@ -188,19 +188,19 @@ function stability_sub_preprocess_node(&$variables) {
     $variables['other_short_code'] = $RU_CODE;
   }
 
-  if ($node->nid == 96965) {
-    // Подключаем скрип передачи данных в Roistat на 
-    // странице invite.
-    drupal_add_js(drupal_get_path('theme', 'stability_sub') . '/js/roistat/roistat_invite.js');
-  }
+  // if ($node->nid == 96965) {
+  //   // Подключаем скрип передачи данных в Roistat на 
+  //   // странице invite.
+  //   drupal_add_js(drupal_get_path('theme', 'stability_sub') . '/js/roistat/roistat_invite.js');
+  // }
 }
 
 function stability_sub_process_page(&$variables) {
-  if (arg(0) == 'user' && arg(1) == 'register' ) {
-    // Подключаем передачу данных на Roistat для 
-    // страницы регистрации.
-    drupal_add_js(drupal_get_path('theme', 'stability_sub') . '/js/roistat/roistat_registration.js');
-  }
+  // if (arg(0) == 'user' && arg(1) == 'register' ) {
+  //   // Подключаем передачу данных на Roistat для 
+  //   // страницы регистрации.
+  //   drupal_add_js(drupal_get_path('theme', 'stability_sub') . '/js/roistat/roistat_registration.js');
+  // }
 
   global $user;
   $variables['login_account_links'] = '';
