@@ -16,6 +16,7 @@ regions[footer]             = Footer
 stylesheets[all][] = css/custom.css
 
 scripts[] = js/widget_categories.js
+scripts[] = js/ajax_pager_history.js
 
 features[] = name
 features[] = logo
