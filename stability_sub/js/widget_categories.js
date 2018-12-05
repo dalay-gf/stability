@@ -5,11 +5,11 @@
             // На маленьких экранах переносим блоки ассортиментов
             // под форму поиска, и делаим их текст "схлопывающимся".
             if (window.matchMedia("(max-width: 990px)").matches) {
-                $searchForm = $('#views-exposed-form-products-main-catalog');
+                $searchForm = $('.view-filters form')[0];
 
-                if (!$searchForm.length) {
-                    $searchForm = $('#views-exposed-form-products-page-5');
-                }
+                // if (!$searchForm.length) {
+                //     $searchForm = $('#views-exposed-form-products-page-5');
+                // }
 
                 $block = $('#menu-categories-block');
                 $collHeader = $('.widget_categories h3', $block);
