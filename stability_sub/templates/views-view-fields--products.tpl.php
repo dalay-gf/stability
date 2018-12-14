@@ -39,6 +39,12 @@ if ($price_value > 0) {
 
 <div class="project-item-inner" id="<?php print "nid-" . $fields['nid']->content; ?>">
 
+  <?php 
+    // Выделяем "новый" товар(если он опубликован не позже, чем 2 месяца назад).
+    $is_new = ((REQUEST_TIME - (int) $fields['created']->content) < (60*60*60*60));
+    if($is_new) print '<span class="new"></span>'; 
+  ?>
+
     <figure class="alignnone project-img">
     <a href="<?php print url('model/' . $fields['field_main_sku']->content . '/' . $fields['nid']->content); ?>"><?php print $fields['uc_product_image']->content; ?></a>
     </figure>
