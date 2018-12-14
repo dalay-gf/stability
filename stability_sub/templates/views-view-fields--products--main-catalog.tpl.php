@@ -106,8 +106,12 @@ if ($discount_percent) {
 
 ?>
 
-
 <div class="project-item-inner" id="<?php print "nid-" . $fields['nid']->content; ?>">
+  <?php 
+    // Выделяем "новый" товар(если он опубликован не позже, чем 2 месяца назад).
+    $is_new = ((REQUEST_TIME - (int) $fields['created']->content) < (60*60*60*60));
+    if($is_new) print '<span class="new"></span>'; 
+  ?>
   <?php if ($discount_coefficient < 1.0): ?>
   <a href="<?php print url('model/' . $fields['field_main_sku']->content . '/' . $fields['nid']->content); ?>">
         <span class="onsale">
