@@ -95,6 +95,15 @@ $current_stock_region = isset($_SESSION['gf_stock_region']) ? $_SESSION['gf_stoc
             print drupal_render($main_menu_tree);
           }
           ?>
+           <?php // Добавляем иконку корзинки со счетчиком товаров в корзине.
+            if (user_is_logged_in()): ?>
+          <li id="cart-icon-menu-item">
+          <a title="<?php print t('There are @count products in your cart', ['@count'=>$uc_cart_items_counter]); ?>"href="<?php print url('/cart'); ?>">
+              <i class="fa fa fa-shopping-cart"></i>
+              <span id="<?php print GF_AJAX_CART_ID_COUNTER_CONTAINER; ?>"><?php print $uc_cart_items_counter; ?></span>
+            </a>
+          </li>
+          <?php endif; ?>
         </ul>
       </nav>
       <!-- Navigation / End -->
