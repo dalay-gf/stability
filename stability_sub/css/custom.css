@@ -1652,9 +1652,10 @@ padding-bottom: 0;
     font-weight: bold;
 }
 .project-item-inner span.new {
-  width: 20px;
-  height: 20px;
-  background-image: url(../images/new-label20.png);
+  width: 25px;
+  height: 25px;
+  background-image: url(../images/new.svg);
+  background-size: 25px 25px;
   position: absolute;
   left: -5px;
   top: -5px;
