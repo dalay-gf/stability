@@ -1661,3 +1661,19 @@ padding-bottom: 0;
   top: -5px;
   z-index: 500;
 }
+ul.discount-messages {
+    text-align: left;
+    display: inline-block;
+    color: red;
+    list-style: none outside;
+    margin-right: 2rem;
+    padding: 0;
+}
+ul.discount-messages em {
+    font-style: normal;
+}
+
+
+td.subtotal span {
+    vertical-align: top;
+}
