@@ -1664,7 +1664,7 @@ padding-bottom: 0;
 ul.discount-messages {
     text-align: left;
     display: inline-block;
-    color: red;
+    color: #f39c12;
     list-style: none outside;
     margin-right: 2rem;
     padding: 0;
