@@ -39,7 +39,7 @@ if ($region_display_price > 0) {
     $retail_price = round($gf_region_prices[$CN_CODE] * 3);
     $order_price = round($gf_region_prices[$CN_CODE] * 0.9);
   } else {
-    $retail_price = round($gf_region_prices[$RU_CODE] * 2);
+    $retail_price = round($gf_region_prices[$RU_CODE] * 2.5);
     $order_price = '';
   }
 } else {
