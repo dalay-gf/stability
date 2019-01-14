@@ -1647,6 +1647,9 @@ padding-bottom: 0;
 #edit-field-country-name-und option:nth-child(2), #edit-field-country-name-und option:nth-child(3), #total-qty span {
     font-weight: bold;
 }
+#total-qty span {
+    margin-right: .5rem;
+}
 .project-item-inner span.new {
   width: 25px;
   height: 25px;
