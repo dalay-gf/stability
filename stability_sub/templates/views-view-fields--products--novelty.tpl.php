@@ -1,6 +1,4 @@
 <?php
-$retail_price_coefficient_ru = 2.5;
-$retail_price_coefficient_cn = 3;
 $current_region = $_SESSION['gf_stock_region'];
 
 //Переключатель валют
@@ -47,10 +45,10 @@ $anchor_path = 'model/' . $fields['field_main_sku']->content . '/' . $fields['ni
  * РРЦ
  */
 if ($ru_price) {
-  $retail_price = $ru_price * $retail_price_coefficient_ru;
+  $retail_price = $ru_price * GF_RETAIL_PRICE_COEFFICIENT['ru'];
 } 
 elseif ($cn_price) {
-  $retail_price = $cn_price * $retail_price_coefficient_cn ;
+  $retail_price = $cn_price * GF_RETAIL_PRICE_COEFFICIENT['cn'] ;
 }
 
 /* Скидки */
@@ -123,7 +121,7 @@ print l($anchor_text, $anchor_path, array('html' => TRUE));
             <div class="row prices">
         <div class="col-md-9 col-sm-9 col-xs-8">
             <?php if ($retail_price) : ?>
-            <span class="retail-amount"><?php print t('RRP') . $symbol . $retail_price; ?></span>
+            <span class="retail-amount"><?php print $symbol . $retail_price; ?></span>
             <?php endif; ?>
           </div>
           <?php if ($curr_reg_price) : ?>

@@ -1,13 +1,10 @@
 <?php
-/*function stability_sub_preprocess_views_view(&$vars) {
-  $view = &$vars['view'];
-  // Make sure it's the correct view
-  if ($view->name == 'orders_for_production') {
-    // add needed javascript
-    drupal_add_js(drupal_get_path('theme', 'stability_sub') . '/js/webform_colorpicker.js');
-  }
-}*/
 
+// Коэффициент для расцета цен, рекомендуемых для розницы.
+define('GF_RETAIL_PRICE_COEFFICIENT', [
+  'ru' => 2.5,
+  'cn' => 3,
+]);
 
 function stability_sub_preprocess_views_view_fields(&$vars) {
   $view = &$vars['view'];
@@ -125,68 +122,85 @@ function stability_sub_webform_element($variables) {
 }
   
   /**
- * Implements hook_form_alter()/
+ * Implements hook_preprocess_node()/
  */
-/*function stability_sub_form_alter(&$form, &$form_state, $form_id) {
-    // Your webform id goes here.
-    if ($form_id == 'webform_client_form_85252') {
-    // Add classes to webform fields.
-//     $form['submitted']['contact_fio']['#container_class'] = 'col-md-6';
-//     $form['submitted']['contact_email']['#container_class'] = 'col-md-6'.
-//     $form['submitted']['contact_phone']['#container_class'] = 'col-md-12 clear-both';
-    }
-}*/
 function stability_sub_preprocess_node(&$variables) {
-  (user_has_role(10)) ? $seller_limited_access = true : $seller_limited_access = false;
-  (user_has_role(12)) ? $is_gross = true : $is_gross = false;
-  (user_has_role(13)) ? $is_publicator = TRUE : $is_publicator = FALSE;
-  (user_has_role(5)) ? $is_manager = TRUE : $is_manager = FALSE;
-  (user_has_role(8)) ? $is_creator = TRUE : $is_creator = FALSE;
+  global $user;
+
+  $extra_10 = FALSE;
   (user_has_role(18)) ? $is_man_sadovod = $extra_10 = TRUE : $is_man_sadovod = FALSE;
   (user_has_role(19)) ? $is_opt_sadovod = $extra_10 = TRUE : $is_opt_sadovod = FALSE;
 
   $node = $variables['node'];
 
-  $RU_CODE = "Russia";
-  $CN_CODE = "China";
+  $current_region = $_SESSION['gf_stock_region'] ?? FALSE;
 
-  if (!(isset($_SESSION['gf_stock_region'])) or $is_opt_sadovod or $is_man_sadovod) {
-    $_SESSION['gf_stock_region'] = $RU_CODE;
+  if ((!$current_region) || $current_region == GF_STOCK_REGION_ALL 
+    || $is_opt_sadovod || $is_man_sadovod) {
+    $current_region = GF_STOCK_REGION_RU;
   }
 
-  $current_region = $_SESSION['gf_stock_region'];
-
-  $variables['seller_limited_access'] = $seller_limited_access;
-  $variables['is_gross'] = $is_gross;
-  $variables['is_publicator'] = $is_publicator;
-  $variables['is_manager'] = $is_manager;
-  $variables['is_creator'] = $is_creator;
+  $variables['seller_limited_access'] = user_has_role(10);
+  $variables['is_gross'] = user_has_role(12);
+  $variables['is_publicator'] = user_has_role(13);
+  $variables['is_manager'] = user_has_role(5);
+  $variables['is_creator'] = user_has_role(8);
   $variables['is_man_sadovod'] = $is_man_sadovod;
   $variables['is_opt_sadovod'] = $is_opt_sadovod;
-  $variables['RU_CODE'] = $RU_CODE;
-  $variables['CN_CODE'] = $CN_CODE;
+  $variables['RU_CODE'] = GF_STOCK_REGION_RU;
+  $variables['CN_CODE'] = GF_STOCK_REGION_CN;
   $variables['current_region'] = $current_region;
   $variables['extra_10'] = $extra_10;
+
   $variables['original_price'] = [
-    $RU_CODE => round($node->gf_region_prices_original['руб']),
-    $CN_CODE => round($node->gf_region_prices_original['юан'])
+    GF_STOCK_REGION_RU => isset($node->gf_region_prices_original['руб']) ? 
+      round($node->gf_region_prices_original['руб']) : 0,
+    GF_STOCK_REGION_CN => isset($node->gf_region_prices_original['юан']) ? 
+      round($node->gf_region_prices_original['юан']) : 0,
   ];
+
+  $ruble_sign = '<i class="fa fa-rub" aria-hidden="true"></i>';
   $variables['original_currency_symbol'] = [
-    $CN_CODE => '<i class="fa fa-cny" aria-hidden="true"></i>',
-    $RU_CODE => '<i class="fa fa-rub" aria-hidden="true"></i>'
+    GF_STOCK_REGION_CN => '<i class="fa fa-cny" aria-hidden="true"></i>',
+    GF_STOCK_REGION_RU => $ruble_sign,
   ];
 
-
-  if ($current_region == $RU_CODE) {
-    $variables['current_code'] = $RU_CODE; 
-    $variables['other_code'] = $CN_CODE; 
-    $variables['other_short_code'] = $CN_CODE;
+  if ($current_region == GF_STOCK_REGION_RU) {
+    $variables['current_code'] = GF_STOCK_REGION_RU; 
+    $variables['other_code'] = GF_STOCK_REGION_CN; 
+    $variables['other_short_code'] = GF_STOCK_REGION_CN;
   } 
   else {
-    $variables['current_code'] = $CN_CODE; 
-    $variables['other_code'] = $RU_CODE; 
-    $variables['other_short_code'] = $RU_CODE;
+    $variables['current_code'] = GF_STOCK_REGION_CN; 
+    $variables['other_code'] = GF_STOCK_REGION_RU; 
+    $variables['other_short_code'] = GF_STOCK_REGION_RU;
   }
+
+
+
+  $field_adaptive = user_load($user->uid)->field_adaptive_design;
+
+  $current_region_price = $node->gf_region_prices[$current_region] ?? 0;
+  $default_currency_code = variable_get('uc_currency_code', UC_CURRENCY_DEFAULT_CURRENCY);
+  $code = isset($_SESSION['currency_switcher']) ? $_SESSION['currency_switcher'] : $default_currency_code;
+
+  $variables['symbol'] = str_replace('руб.', $ruble_sign, currency_api_get_symbol($code));
+  $variables['display_price_base'] = round($current_region_price);
+  $variables['adaptive_enabled'] = isset($field_adaptive[LANGUAGE_NONE]) ?
+    $field_adaptive[LANGUAGE_NONE][0]['value'] : FALSE;
+
+
+
+
+
+  $retail_price_coefficient = ($current_region == GF_STOCK_REGION_RU) ? 
+    GF_RETAIL_PRICE_COEFFICIENT['ru'] : GF_RETAIL_PRICE_COEFFICIENT['cn'];
+
+  $variables['retail_price'] = $variables['display_price_base'] * $retail_price_coefficient;
+  $variables['order_price'] = $node->gf_region_prices[$current_region] ?? 0;
+
+
+
 
   // if ($node->nid == 96965) {
   //   // Подключаем скрип передачи данных в Roistat на 

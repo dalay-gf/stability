@@ -8,61 +8,18 @@ $content['add_to_cart']['#form']['qty']['#suffix'] = '<input type="button" value
 
 ?>
 <?php
-/*
-Проверка на принадлежность к ролям
-*/
-
-/**
- * Переключатель валют
- */
-$default_currency_code = variable_get('uc_currency_code', UC_CURRENCY_DEFAULT_CURRENCY);
-$code = isset($_SESSION['currency_switcher']) ? $_SESSION['currency_switcher'] : $default_currency_code;
-$symbol = currency_api_get_symbol($code);
-
-$ruble_sign = '<i class="fa fa-rub" aria-hidden="true"></i>';
-
-/**
- * установка РРЦ и цены в пошив
- */
-if ($current_region == $RU_CODE) {
-  $region_display_price = $gf_region_prices[$RU_CODE];
-} elseif ($current_region == $CN_CODE) {
-  $region_display_price = round($gf_region_prices[$CN_CODE]);
-} else {
-  $region_display_price = round($gf_region_prices[$RU_CODE]);
-}
-
-if ($region_display_price > 0) {
-  $display_price_base = $region_display_price;
-  $symbol = str_replace('руб.', $ruble_sign, $symbol);
-  if ($gf_region_prices['cn'] > 0) {
-    $retail_price = round($gf_region_prices[$CN_CODE] * 3);
-    $order_price = round($gf_region_prices[$CN_CODE] * 0.9);
-  } else {
-    $retail_price = round($gf_region_prices[$RU_CODE] * 2.5);
-    $order_price = '';
-  }
-} else {
-  $retail_price = 0;
-  $order_price = '';
-  $display_price_base = '';
-}
-$user_data = user_load($user->uid);
-$adaptive_field = $user_data->field_adaptive_design['und'];
-if ($adaptive_field) {
-  $adaptive_enabled = $adaptive_field[0]['value'];
-}
-else {
-  $adaptive_enabled= '';
-}
 
 /*
 Автодобавление в корзину при переходе по ссылке из мобильного приложения-сканера
 */
-if (!empty(drupal_get_query_parameters()['add-to-cart']) OR !empty(drupal_get_query_parameters()['add_to_cart'])){ $add_scanned = (drupal_get_query_parameters()['add-to-cart'] == 'yes' OR drupal_get_query_parameters()['add_to_cart'] == 'yes') ? true : false;} else {$add_scanned = false;};
+$add_scanned = FALSE;
+if (!empty(drupal_get_query_parameters()['add-to-cart']) && !empty(drupal_get_query_parameters()['add_to_cart'])){ 
+  $add_scanned = (drupal_get_query_parameters()['add-to-cart'] == 'yes' && 
+    drupal_get_query_parameters()['add_to_cart'] == 'yes');
+} 
 
 
-(uc_stock_level($node->model) > 0) ? $current_stock = uc_stock_level($node->model) : $current_stock = '';
+// (uc_stock_level($node->model) > 0) ? $current_stock = uc_stock_level($node->model) : $current_stock = '';
 
 if ($add_scanned) {
   uc_cart_add_item($node->nid, $qty = 1);
@@ -85,24 +42,16 @@ foreach($gf_order_actual_sums as $oid => $subsum) {
 
 $rrp_title = t('RRP');
 
-//Голосование
-$vote_enabled = FALSE;
-
-/* Скидки */
-if ($is_man_sadovod or $is_opt_sadovod) {
-  $extra_10 = TRUE;
-}
-
 if ($field_discount[0]) {
   $raw_discount_value = $field_discount[0]["taxonomy_term"]->name;
   $discount_percent = substr($raw_discount_value, 0, strpos($raw_discount_value, '%'));
   $discount = TRUE;
 }
 
-if ($discount and $extra_10) {
+if ($discount && $extra_10) {
   $discount_percent += 10;
 }
-if ($discount != TRUE and $extra_10) {
+if (!$discount && $extra_10) {
   $discount_percent = 10;
 }
 
@@ -131,15 +80,11 @@ if ($discount_percent) {
       <?php endforeach; ?>
     </div>
     <!-- Project Slider / End -->
-    <?php if ($vote_enabled && $logged_in && !$seller_limited_access && !$is_gross && !$is_publicator): ?>
-      <div class="spacer sm"></div>
-      <?php /*print render($content['field_votes']);*/?>
-    <?php endif; ?>
     <div class="spacer lg"></div>
   </div>
   <div class="col-md-6 <?php if($adaptive_enabled == '0'){print ' col-xs-6';}; ?>">
 
-    <?php if ($is_gross == false) :?>
+    <?php if (!$is_gross) :?>
       <div class="tabs">
         <ul class="nav nav-tabs">
           <li class="<?php if (!$extra_10) {print 'half-width';}?> active">
@@ -148,7 +93,8 @@ if ($discount_percent) {
               print t('Warehouse') . " " . t($current_code) . '<br>';
               if ($logged_in && !$seller_limited_access) {
                 if (isset($gf_region_prices[$current_code])) {
-                  print '<span class="tab-price">' . $original_currency_symbol[$current_code] . ($original_price[$current_code] * $discount_coefficient) . '</span>';
+                  print '<span class="tab-price">' . $original_currency_symbol[$current_code] . 
+                    ($order_price * $discount_coefficient) . '</span>';
                 }
                 if (isset($gf_region_prices[$current_code]) and $gf_region_stock[$current_code] > 0) {
                   print " \ ";
@@ -166,7 +112,7 @@ if ($discount_percent) {
               ?>
             </a>
           </li>
-          <?php if ($extra_10 != TRUE) : ?>
+          <?php if (!$extra_10) : ?>
           <li class="half-width">
             <a class="tab" id="other-stock-tab-header" data-toggle="tab" href="#tab-other-stock"><?php
               print t('Warehouse') . " " . t($other_code) . "<br>";
@@ -191,7 +137,7 @@ if ($discount_percent) {
             </a>
           </li>
           <?php endif; ?>
-          <?php if ($is_manager or $is_creator /*or $is_admin and !$is_man_sadovod*/) : ?>
+          <?php if ($is_manager && $is_creator) : ?>
           <li class="col-md-12">
             <a class="tab" id="ofp-tab-header" data-toggle="tab" href="#tab-order">
               <?php
@@ -223,7 +169,7 @@ if ($discount_percent) {
                       <span class="col-sm-12 amount price-<?php print $current_region;?>">
                         <?php
                         if ($discount_coefficient < 1.0) {print '<del>'. round((float)$gf_region_prices[$current_region]) . '</del>&nbsp;';}
-                        print $symbol . round((float)$gf_region_prices[$current_region] * $discount_coefficient);?>
+                        print $symbol . $order_price * $discount_coefficient;?>
                       </span>
                     <?php else: ?>
                       <span class="amount">

@@ -28,8 +28,8 @@ $yuan_to_rub_rate = variable_get('gf_stock_yuan_exchange_rate');
 
 $current_region = $_SESSION['gf_stock_region'];
 
-$ru_price = round($row->gf_stock_prices_region_russia);
-$cn_price_yuan = round($row->gf_stock_prices_region_china);
+$ru_price = isset($row->gf_stock_prices_region_russia) ? round($row->gf_stock_prices_region_russia) : 0;
+$cn_price_yuan = isset($row->gf_stock_prices_region_china) ? round($row->gf_stock_prices_region_china): 0;
 $cn_price = 0;
 
 if ($cn_price_yuan > 0) {$cn_price = round($cn_price_yuan * $yuan_to_rub_rate);}
@@ -69,10 +69,10 @@ if ($symbol == 'руб.') { $symbol = $ruble_sign; }
 /**
  * РРЦ
  */
-if (!is_null($row->gf_stock_prices_region_russia)) {
-  $retail_price = $ru_price * 2;
-} elseif (!is_null($cn_price)) {
-  $retail_price = round($row->gf_stock_prices_region_china) * 3;
+if ($ru_price) {
+  $retail_price = $ru_price * GF_RETAIL_PRICE_COEFFICIENT['ru'];
+} elseif ($cn_price) {
+  $retail_price = $cn_price * GF_RETAIL_PRICE_COEFFICIENT['cn'];
 }
 
 //Путь ссылок на товары
