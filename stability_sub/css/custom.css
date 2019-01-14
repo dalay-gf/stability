@@ -764,7 +764,7 @@ margin-bottom: -24px;
 top: 8px;
 }
 
-.page-model .price .retail-amount, .page-node .price .retail-amount, .page-model .price .amount, .page-node .price .amount {
+.page-model .price .retail-amount, .page-node .price .retail-amount, .page-model .price .amount, .page-node .price .amount, .view-products .retail-amount {
 font-size: 1.5em;
 }
 
