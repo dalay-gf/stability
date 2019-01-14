@@ -289,3 +289,112 @@ function stability_sub_form_alter(&$form, &$form_state, $form_id) {
   }
 };
 
+function stability_sub_uc_cart_review_table($variables) {
+  $items = $variables['items'];
+  $show_subtotal = $variables['show_subtotal'];
+
+  $subtotal = 0;
+
+  // Set up table header.
+  $header = array(
+    array('data' => theme('uc_qty_label'), 'class' => array('qty')),
+    array('data' => t('Products'), 'class' => array('products')),
+    array('data' => t('Price'), 'class' => array('price')),
+  );
+
+  // Set up table rows.
+  $display_items = uc_order_product_view_multiple($items);
+  if (!empty($display_items['uc_order_product'])) {
+    foreach (element_children($display_items['uc_order_product']) as $key) {
+      $display_item = $display_items['uc_order_product'][$key];
+      $subtotal += $display_item['total']['#price'];
+      $rows[] = array(
+        array('data' => $display_item['qty'], 'class' => array('qty')),
+        array('data' => $display_item['product'], 'class' => array('products')),
+        array('data' => $display_item['total'], 'class' => array('price')),
+      );
+    }
+  }
+
+  // Add the subtotal as the final row.
+  if ($show_subtotal) {
+    $rows[] = array(
+      'data' => array(
+        // One cell
+        array(
+          'data' => array(
+            '#theme' => 'uc_price',
+            '#prefix' => '<span id="subtotal-title">' . t('Subtotal:') . '</span> ',
+            '#price' => $subtotal,
+            '#suffix' => '<div id="total-qty"><span>'. t('Total qty:') . 
+            '</span>' . uc_cart_get_total_qty() . '</div>', // добавляем инф-ю об общем кол-ве заказанного
+          ),
+          // Cell attributes
+          'colspan' => 3,
+          'class' => array('subtotal'),
+        ),
+      ),
+      // Row attributes
+      'class' => array('subtotal'),
+    );
+  }
+
+  return theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('class' => array('cart-review'))));
+}
+
+function stability_sub_uc_cart_checkout_review($variables) {
+  $panes = $variables['panes'];
+  $form = $variables['form'];
+
+  drupal_add_css(drupal_get_path('module', 'uc_cart') . '/uc_cart.css');
+
+  $output = '<div id="review-instructions">' . filter_xss_admin(variable_get('uc_checkout_review_instructions', uc_get_message('review_instructions'))) . '</div>';
+
+  $output .= '<table class="order-review-table">';
+
+  foreach ($panes as $title => $data) {
+    $output .= '<tr class="pane-title-row">';
+    $output .= '<td colspan="2">' . $title . '</td>';
+    $output .= '</tr>';
+    if (is_array($data)) {
+      if ($title == t('Payment method')) {
+        // Если мы в разделе отображения методов оплаты(определяем по
+        // заголовку раздела), то добавляем после поля с общей суммой заказа
+        // данные об общем кол-ве заказанного. Поле с данными о методе оплаты двигаем ниже.
+        $data[3] = $data[2];
+        $data[2] = [
+          'title' => t('Total qty'),
+          'data' => '<span class="total-qty">' . uc_cart_get_total_qty() . '</span>',
+        ];
+      }
+      foreach ($data as $row) {
+        if (is_array($row)) {
+          if (isset($row['border'])) {
+            $border = ' class="row-border-' . $row['border'] . '"';
+          }
+          else {
+            $border = '';
+          }
+          $output .= '<tr' . $border . '>';
+          $output .= '<td class="title-col">' . $row['title'] . ':</td>';
+          $output .= '<td class="data-col">' . $row['data'] . '</td>';
+          $output .= '</tr>';
+        }
+        else {
+          $output .= '<tr><td colspan="2">' . $row . '</td></tr>';
+        }
+      }
+    }
+    else {
+      $output .= '<tr><td colspan="2">' . $data . '</td></tr>';
+    }
+  }
+
+  $output .= '<tr class="review-button-row">';
+  $output .= '<td colspan="2">' . drupal_render($form) . '</td>';
+  $output .= '</tr>';
+
+  $output .= '</table>';
+
+  return $output;
+}
