@@ -67,7 +67,7 @@ if ($discount_percent) {
 <?php hide($content['field_antiprice']);?>
 
 <div id="node-<?php print $node->nid; ?>" class="row <?php print $classes; ?>"<?php print $attributes; ?>>
-  <div class="col-md-6 <?php if($adaptive_enabled == '0'){print ' col-xs-6';}; ?>">
+  <div class="col-md-6 <?php if(!$adaptive_enabled){print ' col-xs-6';}; ?>">
     <!-- Project Slider -->
     <?php if ((isset($content["field_discount"][0]) and $content["field_discount"][0]["#markup"] != "0%") or $extra_10) : ?>
       <span class="onsale"><?php print '-' . $discount_percent . '%';?></span>
@@ -82,7 +82,7 @@ if ($discount_percent) {
     <!-- Project Slider / End -->
     <div class="spacer lg"></div>
   </div>
-  <div class="col-md-6 <?php if($adaptive_enabled == '0'){print ' col-xs-6';}; ?>">
+  <div class="col-md-6 <?php if(!$adaptive_enabled){print ' col-xs-6';}; ?>">
 
     <?php if (!$is_gross) :?>
       <div class="tabs">

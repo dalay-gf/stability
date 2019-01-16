@@ -187,7 +187,7 @@ function stability_sub_preprocess_node(&$variables) {
   $variables['symbol'] = str_replace('руб.', $ruble_sign, currency_api_get_symbol($code));
   $variables['display_price_base'] = round($current_region_price);
   $variables['adaptive_enabled'] = isset($field_adaptive[LANGUAGE_NONE]) ?
-    $field_adaptive[LANGUAGE_NONE][0]['value'] : FALSE;
+    $field_adaptive[LANGUAGE_NONE][0]['value'] : TRUE;
 
 
 
