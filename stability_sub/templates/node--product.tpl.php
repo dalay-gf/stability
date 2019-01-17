@@ -19,26 +19,9 @@ if (!empty(drupal_get_query_parameters()['add-to-cart']) && !empty(drupal_get_qu
 } 
 
 
-// (uc_stock_level($node->model) > 0) ? $current_stock = uc_stock_level($node->model) : $current_stock = '';
-
 if ($add_scanned) {
   uc_cart_add_item($node->nid, $qty = 1);
 };
-
-/*
- * Сумма товаров в заказе
- */
-/*$gf_order_actual_sums = db_select('gf_order_production', 'o')
-  ->fields('o', ['oid', 'qty_total'])
-  ->condition('o.model_id', $node->field_main_sku['und'][0]['value'])
-  ->condition('o.status', 0, '=')
-  ->execute()
-  ->fetchAllKeyed();
-
-$gf_order_total_sum = 0;
-foreach($gf_order_actual_sums as $oid => $subsum) {
-  $gf_order_total_sum += $subsum;
-};*/
 
 $rrp_title = t('RRP');
 
@@ -118,7 +101,7 @@ if ($discount_percent) {
               print t('Warehouse') . " " . t($other_code) . "<br>";
               if ($logged_in && !$seller_limited_access) {
                 if (isset($gf_region_prices[$other_code])) {
-                  print '<span class="tab-price">' . $original_currency_symbol[$other_code] . $original_price[$other_short_code] . '</span>';
+                  print '<span class="tab-price">' . $original_currency_symbol[$other_code] . $original_price[$other_code] . '</span>';
                 }
                 if (isset($gf_region_prices[$other_code]) && $gf_region_stock[$other_code] > 0) {
                   print " \ ";
@@ -160,10 +143,10 @@ if ($discount_percent) {
             <div class="row">
               <div class="col-xs-6">
                 <div class="price row">
-                  <?php if($logged_in <> true or $seller_limited_access == true): ?>
+                  <?php if(!$logged_in || $seller_limited_access): ?>
                     <span class="amount"><?php print l(t('Show price'), 'user/register', array('attributes' => array('class' => array('btn', 'btn-primary'), 'data-inner-height'=>array('90%'), 'data-inner-width'=>array("40%")), 'query' => array('from' => 'show-price')));?></span>
                   <?php endif; ?>
-                  <?php if($logged_in == true and !($seller_limited_access == true)): ?>
+                  <?php if($logged_in && !$seller_limited_access): ?>
                     <?php if ($retail_price > 0) {print '<span class="retail-amount col-sm-12">' . $rrp_title . "&nbsp;" . $symbol . $retail_price . '</span>';} ?>
                     <?php if ($current_region != 'all'): ?>
                       <span class="col-sm-12 amount price-<?php print $current_region;?>">
@@ -243,26 +226,20 @@ if ($discount_percent) {
               </div>
             </div>
           </div>
-          <?php if ($extra_10 != TRUE) :?>
+          <?php if (!$extra_10) :?>
           <div id="tab-other-stock" class="tab-pane fade fitVids-tabs-processed row ">
             <div class="row">
               <div class="col-xs-6">
                 <div class="price">
-                  <?php if($logged_in <> true or $seller_limited_access == true): ?>
+                  <?php if(!$logged_in || $seller_limited_access): ?>
                     <span class="amount"><?php print l(t('Show price'), 'user/register', array('attributes' => array('class' => array('btn', 'btn-primary'), 'data-inner-height'=>array('90%'), 'data-inner-width'=>array("40%")), 'query' => array('from' => 'show-price')));?></span>
                   <?php endif; ?>
-                  <?php if($logged_in == true and !($seller_limited_access == true)): ?>
-                    <span class="retail-amount"><?php ($retail_price !== 0) ? print $rrp_title . ':<br>' .
-                        $symbol . $retail_price : print ''; ?></span>
-                    <?php if ($current_region != 'all'): ?>
-                      <span class="amount price-<?php print $current_region;?>">
-                      <?php print $symbol . round($gf_region_prices[$other_short_code]);?>
+                  <?php if($logged_in && !$seller_limited_access): ?>
+                    <span class="retail-amount"><?php print ($retail_price > 0) ? $rrp_title . ':<br>' .
+                        $original_currency_symbol[$other_code] . ($original_price[$other_code] * GF_RETAIL_PRICE_COEFFICIENT) : ''; ?></span>
+                      <span class="amount<?php if ($current_region != 'all') print ' price-' . $other_code;?>">
+                      <?php print $original_currency_symbol[$other_code] .$original_price[$other_code];?>
                       </span>
-                    <?php else: ?>
-                      <span class="amount">
-                      <?php print $symbol . round($gf_region_prices[$other_short_code]);?>
-                      </span>
-                    <?php endif; ?>
                   <?php endif; ?>
                 </div>
               </div>
@@ -270,7 +247,7 @@ if ($discount_percent) {
               <div class="col-xs-6">
                 <?php
                 print '<div class="buttons_added">';
-                if($logged_in == true and !($seller_limited_access == true) and $gf_region_stock[$other_code] >= 1 and isset($gf_region_prices[$other_short_code])) {
+                if($logged_in && !$seller_limited_access && $gf_region_stock[$other_code] >= 1 && isset($gf_region_prices[$other_code])) {
                   print '<span class="fa-stack fa-2x">
   <i class="fa fa-shopping-cart fa-stack-1x"></i><i class="fa fa-ban fa-stack-2x"></i></span>';
                   print '</div><span>'. t("Other warehouse is selected") .'</span>';

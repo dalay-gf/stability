@@ -45,10 +45,10 @@ $anchor_path = 'model/' . $fields['field_main_sku']->content . '/' . $fields['ni
  * РРЦ
  */
 if ($ru_price) {
-  $retail_price = $ru_price * GF_RETAIL_PRICE_COEFFICIENT['ru'];
+  $retail_price = $ru_price * GF_RETAIL_PRICE_COEFFICIENT;
 } 
 elseif ($cn_price) {
-  $retail_price = $cn_price * GF_RETAIL_PRICE_COEFFICIENT['cn'] ;
+  $retail_price = $cn_price * GF_RETAIL_PRICE_COEFFICIENT ;
 }
 
 /* Скидки */
