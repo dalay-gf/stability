@@ -73,18 +73,18 @@ if ($discount_percent) {
           <li class="<?php if (!$extra_10) {print 'half-width';}?> active">
             <a class="tab" data-toggle="tab" href="#tab-stocks">
               <?php
-              print t('Warehouse') . " " . t($current_code) . '<br>';
+              print t('Warehouse') . " " . t($current_region) . '<br>';
               if ($logged_in && !$seller_limited_access) {
-                if (isset($gf_region_prices[$current_code])) {
-                  print '<span class="tab-price">' . $original_currency_symbol[$current_code] . 
+                if (isset($gf_region_prices[$current_region])) {
+                  print '<span class="tab-price">' . $original_currency_symbol[$current_region] . 
                     ($order_price * $discount_coefficient) . '</span>';
                 }
-                if (isset($gf_region_prices[$current_code]) and $gf_region_stock[$current_code] > 0) {
+                if (isset($gf_region_prices[$current_region]) and $gf_region_stock[$current_region] > 0) {
                   print " \ ";
                 }
-                if ($gf_region_stock[$current_code] > 0) {
+                if ($gf_region_stock[$current_region] > 0) {
                   if ($is_manager or $is_creator or $is_admin) {
-                    print $gf_region_stock[$current_code];
+                    print $gf_region_stock[$current_region];
                   } else {
                     print " &#10003;";
                   }
@@ -98,17 +98,17 @@ if ($discount_percent) {
           <?php if (!$extra_10) : ?>
           <li class="half-width">
             <a class="tab" id="other-stock-tab-header" data-toggle="tab" href="#tab-other-stock"><?php
-              print t('Warehouse') . " " . t($other_code) . "<br>";
+              print t('Warehouse') . " " . t($other_region) . "<br>";
               if ($logged_in && !$seller_limited_access) {
-                if (isset($gf_region_prices[$other_code])) {
-                  print '<span class="tab-price">' . $original_currency_symbol[$other_code] . $original_price[$other_code] . '</span>';
+                if (isset($gf_region_prices[$other_region])) {
+                  print '<span class="tab-price">' . $original_currency_symbol[$other_region] . $original_price[$other_region] . '</span>';
                 }
-                if (isset($gf_region_prices[$other_code]) && $gf_region_stock[$other_code] > 0) {
+                if (isset($gf_region_prices[$other_region]) && $gf_region_stock[$other_region] > 0) {
                   print " \ ";
                 }
-                if ($gf_region_stock[$other_code] > 0) {
+                if ($gf_region_stock[$other_region] > 0) {
                   if ($is_manager or $is_creator or $is_admin) {
-                    print $gf_region_stock[$other_code];
+                    print $gf_region_stock[$other_region];
                   } else {
                     print " &#10003;";
                   }
@@ -164,7 +164,7 @@ if ($discount_percent) {
                 <?php if ($is_publicator or $is_admin) {
                   $anchor_content = t('Request price change');
                   $anchor_path = 'node/89336';
-                  print l($anchor_content, $anchor_path, ['attributes' => ['class' => 'colorbox-node', 'data-inner-height' => '50%', 'data-inner-width' => '50%'], 'query' => [drupal_get_destination(), 'nid' => $nid, 'region'=>$current_region, 'price'=>$display_price_base, 'model'=>$model], 'html' => TRUE]);
+                  print l($anchor_content, $anchor_path, ['attributes' => ['class' => 'colorbox-node', 'data-inner-height' => '50%', 'data-inner-width' => '50%'], 'query' => [drupal_get_destination(), 'nid' => $nid, 'region'=>$current_region, 'price'=>$order_price, 'model'=>$model], 'html' => TRUE]);
                   }
                 ?>
               </div>
@@ -172,7 +172,7 @@ if ($discount_percent) {
               <div class="col-xs-6">
                   <?php
                   print '<div class="buttons_added">';
-                  if(user_access('create orders') && $logged_in and !($seller_limited_access == true) and $gf_region_stock[$current_code] > 0 and isset($gf_region_prices[$current_code])) {
+                  if(user_access('create orders') && $logged_in and !($seller_limited_access == true) and $gf_region_stock[$current_region] > 0 and isset($gf_region_prices[$current_region])) {
                     print render($content['add_to_cart']);
                   } else {
                     print '<span class="fa-stack fa-2x">
@@ -236,9 +236,9 @@ if ($discount_percent) {
                   <?php endif; ?>
                   <?php if($logged_in && !$seller_limited_access): ?>
                     <span class="retail-amount"><?php print ($retail_price > 0) ? $rrp_title . ':<br>' .
-                        $original_currency_symbol[$other_code] . ($original_price[$other_code] * GF_RETAIL_PRICE_COEFFICIENT) : ''; ?></span>
-                      <span class="amount<?php if ($current_region != 'all') print ' price-' . $other_code;?>">
-                      <?php print $original_currency_symbol[$other_code] .$original_price[$other_code];?>
+                        $original_currency_symbol[$other_region] . ($original_price[$other_region] * GF_RETAIL_PRICE_COEFFICIENT) : ''; ?></span>
+                      <span class="amount<?php if ($current_region != 'all') print ' price-' . $other_region;?>">
+                      <?php print $original_currency_symbol[$other_region] .$original_price[$other_region];?>
                       </span>
                   <?php endif; ?>
                 </div>
@@ -247,7 +247,7 @@ if ($discount_percent) {
               <div class="col-xs-6">
                 <?php
                 print '<div class="buttons_added">';
-                if($logged_in && !$seller_limited_access && $gf_region_stock[$other_code] >= 1 && isset($gf_region_prices[$other_code])) {
+                if($logged_in && !$seller_limited_access && $gf_region_stock[$other_region] >= 1 && isset($gf_region_prices[$other_region])) {
                   print '<span class="fa-stack fa-2x">
   <i class="fa fa-shopping-cart fa-stack-1x"></i><i class="fa fa-ban fa-stack-2x"></i></span>';
                   print '</div><span>'. t("Other warehouse is selected") .'</span>';
