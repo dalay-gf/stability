@@ -19,6 +19,7 @@ function stability_sub_preprocess_node(&$variables) {
       || $is_opt_sadovod || $is_man_sadovod) {
       $current_region = GF_STOCK_REGION_RU;
     }
+
     $other_region = ($current_region == GF_STOCK_REGION_RU) ? GF_STOCK_REGION_CN : GF_STOCK_REGION_RU;
 
     $variables['seller_limited_access'] = user_has_role(10);
@@ -45,20 +46,28 @@ function stability_sub_preprocess_node(&$variables) {
       GF_STOCK_REGION_RU => '<i class="fa fa-rub" aria-hidden="true"></i>',
     ];
 
-    $order_price = (isset($node->gf_region_stock[$current_region]) && 
-      isset($node->gf_region_prices[$current_region])) ? round($node->gf_region_prices[$current_region]) : 0;
+    $price_ru = (isset($node->gf_region_stock[GF_STOCK_REGION_RU]) && 
+      isset($node->gf_region_prices[GF_STOCK_REGION_RU])) ? 
+      round($node->gf_region_prices[GF_STOCK_REGION_RU]) : 0;
 
-    $other_order_price = (isset($node->gf_region_stock[$other_region]) && 
-      isset($node->gf_region_prices[$other_region])) ? round($node->gf_region_prices[$other_region]) : 0;
-
+    $price_cn = (isset($node->gf_region_stock[GF_STOCK_REGION_CN])) ? 
+      $original_price[GF_STOCK_REGION_CN] : 0;
 
     $yuan_to_rub_rate = variable_get('gf_stock_yuan_exchange_rate');
 
+    $retail_price = ($price_ru) ? ($price_ru * GF_RETAIL_PRICE_COEFFICIENT) : 0;
+    $retail_price_cn = ($retail_price / $yuan_to_rub_rate);
+
     if ($current_region == GF_STOCK_REGION_CN) {
-      $order_price = round($order_price / $yuan_to_rub_rate);
+      $order_price = $price_cn;
+      $other_retail_price = $retail_price;
+      $retail_price = $retail_price_cn;
+      $other_order_price = $price_ru;
     } 
     else {
-      $other_order_price = round($other_order_price / $yuan_to_rub_rate);
+      $order_price = $price_ru;
+      $other_order_price = $price_cn;
+      $other_retail_price = $retail_price_cn;
     }
 
     $variables['other_region'] = $other_region; 
@@ -73,11 +82,10 @@ function stability_sub_preprocess_node(&$variables) {
 
 
     $variables['order_price'] = $order_price;
-    $variables['retail_price'] = $order_price ? ($order_price * GF_RETAIL_PRICE_COEFFICIENT) : 0;
+    $variables['retail_price'] = round($retail_price);
 
     $variables['other_order_price'] = $other_order_price;
-    $variables['other_retail_price'] = $other_order_price ? ($other_order_price * GF_RETAIL_PRICE_COEFFICIENT) : 0;
-
+    $variables['other_retail_price'] = round($other_retail_price);
   }
 
 }
