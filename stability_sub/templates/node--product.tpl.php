@@ -75,11 +75,11 @@ if ($discount_percent) {
               <?php
               print t('Warehouse') . " " . t($current_region) . '<br>';
               if ($logged_in && !$seller_limited_access) {
-                if (isset($gf_region_prices[$current_region])) {
-                  print '<span class="tab-price">' . $original_currency_symbol[$current_region] . 
+                if ($order_price) {
+                  print '<span class="tab-price">' . $currency_symbol[$current_region] . 
                     ($order_price * $discount_coefficient) . '</span>';
                 }
-                if (isset($gf_region_prices[$current_region]) and $gf_region_stock[$current_region] > 0) {
+                if ($order_price && ($gf_region_stock[$current_region] > 0)) {
                   print " \ ";
                 }
                 if ($gf_region_stock[$current_region] > 0) {
@@ -100,10 +100,10 @@ if ($discount_percent) {
             <a class="tab" id="other-stock-tab-header" data-toggle="tab" href="#tab-other-stock"><?php
               print t('Warehouse') . " " . t($other_region) . "<br>";
               if ($logged_in && !$seller_limited_access) {
-                if (isset($gf_region_prices[$other_region])) {
-                  print '<span class="tab-price">' . $original_currency_symbol[$other_region] . $original_price[$other_region] . '</span>';
+                if ($other_order_price) {
+                  print '<span class="tab-price">' . $currency_symbol[$other_region] . $other_order_price . '</span>';
                 }
-                if (isset($gf_region_prices[$other_region]) && $gf_region_stock[$other_region] > 0) {
+                if ($other_order_price && $gf_region_stock[$other_region] > 0) {
                   print " \ ";
                 }
                 if ($gf_region_stock[$other_region] > 0) {
@@ -127,8 +127,8 @@ if ($discount_percent) {
               $totalSum =  views_embed_view('orders_for_production', 'block', $content['field_main_sku']['#items'][0]['value']);
               print t('Order for Production');
               print '<br><span class="tab-price">';
-              if ($order_price > 0) {print $order_price;}
-              if ($order_price > 0 and $totalSum > 0) {print '</span>';}
+              if ($order_price) {print $order_price;}
+              if ($order_price && ($totalSum > 0)) {print '</span>';}
               if ($totalSum > 0) {print $totalSum;}
               ?>
             </a>
@@ -146,17 +146,17 @@ if ($discount_percent) {
                   <?php if(!$logged_in || $seller_limited_access): ?>
                     <span class="amount"><?php print l(t('Show price'), 'user/register', array('attributes' => array('class' => array('btn', 'btn-primary'), 'data-inner-height'=>array('90%'), 'data-inner-width'=>array("40%")), 'query' => array('from' => 'show-price')));?></span>
                   <?php endif; ?>
-                  <?php if($logged_in && !$seller_limited_access): ?>
-                    <?php if ($retail_price > 0) {print '<span class="retail-amount col-sm-12">' . $rrp_title . "&nbsp;" . $symbol . $retail_price . '</span>';} ?>
+                  <?php if($logged_in && !$seller_limited_access && $order_price): ?>
+                    <?php if ($retail_price) {print '<span class="retail-amount col-sm-12">' . $rrp_title . "&nbsp;" . $currency_symbol[$current_region] . $retail_price . '</span>';} ?>
                     <?php if ($current_region != 'all'): ?>
                       <span class="col-sm-12 amount price-<?php print $current_region;?>">
                         <?php
-                        if ($discount_coefficient < 1.0) {print '<del>'. round((float)$gf_region_prices[$current_region]) . '</del>&nbsp;';}
-                        print $symbol . $order_price * $discount_coefficient;?>
+                        if ($discount_coefficient < 1.0) {print '<del>'. $order_price . '</del>&nbsp;';}
+                        print $currency_symbol[$current_region] . $order_price * $discount_coefficient;?>
                       </span>
                     <?php else: ?>
                       <span class="amount">
-                      <?php print $symbol . round($gf_region_prices['ru']);?>
+                      <?php print $currency_symbol[GF_STOCK_REGION_RU] . round($gf_region_prices[GF_STOCK_REGION_RU]);?>
                       </span>
                     <?php endif; ?>
                   <?php endif; ?>
@@ -172,7 +172,8 @@ if ($discount_percent) {
               <div class="col-xs-6">
                   <?php
                   print '<div class="buttons_added">';
-                  if(user_access('create orders') && $logged_in and !($seller_limited_access == true) and $gf_region_stock[$current_region] > 0 and isset($gf_region_prices[$current_region])) {
+                  if(user_access('create orders') && $logged_in && !$seller_limited_access && 
+                    ($gf_region_stock[$current_region] > 0) && $order_price) {
                     print render($content['add_to_cart']);
                   } else {
                     print '<span class="fa-stack fa-2x">
@@ -234,11 +235,11 @@ if ($discount_percent) {
                   <?php if(!$logged_in || $seller_limited_access): ?>
                     <span class="amount"><?php print l(t('Show price'), 'user/register', array('attributes' => array('class' => array('btn', 'btn-primary'), 'data-inner-height'=>array('90%'), 'data-inner-width'=>array("40%")), 'query' => array('from' => 'show-price')));?></span>
                   <?php endif; ?>
-                  <?php if($logged_in && !$seller_limited_access): ?>
-                    <span class="retail-amount"><?php print ($retail_price > 0) ? $rrp_title . ':<br>' .
-                        $original_currency_symbol[$other_region] . ($original_price[$other_region] * GF_RETAIL_PRICE_COEFFICIENT) : ''; ?></span>
+                  <?php if($logged_in && !$seller_limited_access && $other_order_price): ?>
+                    <span class="retail-amount"><?php print ($other_retail_price > 0) ? $rrp_title . ':<br>' .
+                        $currency_symbol[$other_region] . $other_retail_price : ''; ?></span>
                       <span class="amount<?php if ($current_region != 'all') print ' price-' . $other_region;?>">
-                      <?php print $original_currency_symbol[$other_region] .$original_price[$other_region];?>
+                      <?php print $currency_symbol[$other_region] . $other_order_price;?>
                       </span>
                   <?php endif; ?>
                 </div>
@@ -247,7 +248,8 @@ if ($discount_percent) {
               <div class="col-xs-6">
                 <?php
                 print '<div class="buttons_added">';
-                if($logged_in && !$seller_limited_access && $gf_region_stock[$other_region] >= 1 && isset($gf_region_prices[$other_region])) {
+                  if($logged_in && !$seller_limited_access && 
+                    ($gf_region_stock[$other_region] > 0) && $other_order_price) {
                   print '<span class="fa-stack fa-2x">
   <i class="fa fa-shopping-cart fa-stack-1x"></i><i class="fa fa-ban fa-stack-2x"></i></span>';
                   print '</div><span>'. t("Other warehouse is selected") .'</span>';
@@ -291,7 +293,7 @@ if ($discount_percent) {
             </div>
         </div>
         <?php endif; ?>
-          <?php if ($is_manager or $is_creator or $is_admin) : ?>
+          <?php if ($order_price && $is_manager && $is_creator && $is_admin) : ?>
             <div id="tab-order" class="tab-pane fade row">
               <div class="available-colors col-md-12"><?php print views_embed_view('groupped_catalog', 'page', $content['field_main_sku']['#items'][0]['value']); ?></div>
               <div class="col-md-12">
