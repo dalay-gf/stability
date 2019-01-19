@@ -31,27 +31,15 @@ function stability_sub_preprocess_node(&$variables) {
     $variables['is_opt_sadovod'] = $is_opt_sadovod;
     $variables['current_region'] = $current_region;
     $variables['extra_10'] = $extra_10;
-
-    $original_price = [
-      GF_STOCK_REGION_RU => isset($node->gf_region_prices_original['руб']) ? 
-      round($node->gf_region_prices_original['руб']) : 0,
-        GF_STOCK_REGION_CN => isset($node->gf_region_prices_original['юан']) ? 
-        round($node->gf_region_prices_original['юан']) : 0,
-        ];
-
-    $variables['original_price'] = $original_price;
-
     $variables['currency_symbol'] = [
       GF_STOCK_REGION_CN => '<i class="fa fa-cny" aria-hidden="true"></i>',
       GF_STOCK_REGION_RU => '<i class="fa fa-rub" aria-hidden="true"></i>',
     ];
 
-    $price_ru = (isset($node->gf_region_stock[GF_STOCK_REGION_RU]) && 
-      isset($node->gf_region_prices[GF_STOCK_REGION_RU])) ? 
+    $price_ru = ($node->gf_region_stock[GF_STOCK_REGION_RU] > 0) ? 
       round($node->gf_region_prices[GF_STOCK_REGION_RU]) : 0;
-
-    $price_cn = (isset($node->gf_region_stock[GF_STOCK_REGION_CN])) ? 
-      $original_price[GF_STOCK_REGION_CN] : 0;
+    $price_cn = ($node->gf_region_stock[GF_STOCK_REGION_CN] > 0) ? 
+      round($node->gf_region_prices[GF_STOCK_REGION_CN]) : 0;
 
     $yuan_to_rub_rate = variable_get('gf_stock_yuan_exchange_rate');
 
