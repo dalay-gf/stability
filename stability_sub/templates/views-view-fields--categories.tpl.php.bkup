@@ -1,9 +1,0 @@
-<span>
-  <?php
-    $termId = $fields['tid']->raw;
-    $termId = (int) $termId;
-    $tterm = taxonomy_term_load($termId);
-    $tterm_name = $tterm->name;
-    print render(l(t($tterm_name), "novelty/$tterm->tid", array('attributes' => array('class' => array('novelty-cat-link')))));
-  ?>
-</span>
