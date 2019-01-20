@@ -3,56 +3,6 @@
 // Коэффициент для расцета цен, рекомендуемых для розницы.
 define('GF_RETAIL_PRICE_COEFFICIENT', 2.5);
 
-function stability_sub_preprocess_views_view_fields(&$vars) {
-  $view = &$vars['view'];
-  if ($view->name == 'products') {
-
-    (user_has_role(10)) ? $seller_limited_access = TRUE : $seller_limited_access = FALSE;
-    (user_has_role(12)) ? $is_gross = TRUE : $is_gross = FALSE;
-    (user_has_role(13)) ? $is_publicator = TRUE : $is_publicator = FALSE;
-    (user_has_role(5)) ? $is_manager = TRUE : $is_manager = FALSE;
-    (user_has_role(7)) ? $is_wholesaler = TRUE : $is_wholesaler = FALSE;
-    (user_has_role(8)) ? $is_creator = TRUE : $is_creator = FALSE;
-    if (user_has_role(18)) {
-      $is_man_sadovod = TRUE;
-      $extra_10 = TRUE;
-    } else {
-      $is_man_sadovod = FALSE;
-    }
-    if (user_has_role(19)) {
-      $is_opt_sadovod = TRUE;
-      $extra_10 = TRUE;
-    } else {
-      $is_opt_sadovod = FALSE;
-    }
-
-
-    $RU_CODE = "Russia";
-    $CN_CODE = "China";
-
-    if (!(isset($_SESSION['gf_stock_region'])) or $is_opt_sadovod or $is_man_sadovod) {
-      $_SESSION['gf_stock_region'] = $RU_CODE;
-    }
-
-    /**
-     * Курс Юаня к Рублю
-     */
-    //$yuan_to_rub_rate = variable_get('gf_stock_yuan_exchange_rate');
-
-    $vars['seller_limited_access'] = $seller_limited_access;
-    $vars['is_gross'] = $is_gross;
-    $vars['is_wholesaler'] = $is_wholesaler;
-    $vars['is_publicator'] = $is_publicator;
-    $vars['is_manager'] = $is_manager;
-    $vars['is_creator'] = $is_creator;
-    $vars['is_man_sadovod'] = $is_man_sadovod;
-    $vars['is_opt_sadovod'] = $is_opt_sadovod;
-    $vars['extra_10'] = $extra_10;
-    $vars['RU_CODE'] = $RU_CODE;
-    $vars['CN_CODE'] = $CN_CODE;
-  }
-}
-
 /**
  * Replacement for theme_webform_element().
  */
@@ -310,3 +260,5 @@ function stability_sub_uc_cart_checkout_review($variables) {
 }
 
 include 'node-preprocess.inc';
+include 'preprocess_views_view_fields.inc';
+

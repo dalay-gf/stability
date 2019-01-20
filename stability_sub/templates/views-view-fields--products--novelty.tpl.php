@@ -1,35 +1,4 @@
 <?php
-$current_region = $_SESSION['gf_stock_region'];
-
-//Переключатель валют
-$default_currency_code = variable_get('uc_currency_code', UC_CURRENCY_DEFAULT_CURRENCY);
-$code = isset($_SESSION['currency_switcher']) ? $_SESSION['currency_switcher'] : $default_currency_code;
-$symbol = currency_api_get_symbol($code);
-$price_value = intval(str_replace($symbol, '', strip_tags($fields['price']->content)));
-$ruble_sign = '<i class="fa fa-rub" aria-hidden="true"></i>';
-
-$symbol = str_replace('руб.', $ruble_sign, $symbol);
-
-$ru_price = $cn_price = 0;
-
-if (isset($row->gf_stock_prices_region_russia)) {
-  $ru_price = round($row->gf_stock_prices_region_russia);
-}
-if (isset($row->gf_stock_prices_region_china)) {
-  $yuan_to_rub_rate = variable_get('gf_stock_yuan_exchange_rate', 1);
-  $cn_price = round($row->gf_stock_prices_region_china) * $yuan_to_rub_rate;
-}
-
-if ($current_region == $RU_CODE) {
-  $current_code = $RU_CODE;
-  $other_code = $CN_CODE;
-  $curr_reg_price = $ru_price;
-} 
-else {
-  $current_code = $CN_CODE;
-  $other_code = $RU_CODE;
-  $curr_reg_price = $cn_price ?: FALSE;
-} 
 
 
 //Подгрузка переменной из header/header-1.tpl.php
@@ -41,15 +10,6 @@ $anchor_path = 'model/' . $fields['field_main_sku']->content . '/' . $fields['ni
 
 (node_last_viewed($row->nid) > 0) ? $node_is_viewed = TRUE : $node_is_viewed = FALSE;
 
-/**
- * РРЦ
- */
-if ($ru_price) {
-  $retail_price = $ru_price * GF_RETAIL_PRICE_COEFFICIENT;
-} 
-elseif ($cn_price) {
-  $retail_price = $cn_price * GF_RETAIL_PRICE_COEFFICIENT ;
-}
 
 /* Скидки */
 if (count($row->_field_data["nid"]["entity"]->field_discount) > 0) {
@@ -70,8 +30,6 @@ if ($discount_percent) {
   $discount_coefficient = 1;
 }
 
-//Голосование
-$vote_enabled = FALSE;
 ?>
 
 
@@ -120,11 +78,11 @@ print l($anchor_text, $anchor_path, array('html' => TRUE));
           <div class="price">
             <div class="row prices">
         <div class="col-md-9 col-sm-9 col-xs-8">
+          <?php if ($curr_reg_price) : ?>
             <?php if ($retail_price) : ?>
             <span class="retail-amount"><?php print $symbol . $retail_price; ?></span>
             <?php endif; ?>
           </div>
-          <?php if ($curr_reg_price) : ?>
           <div class="col-md-3 col-sm-3 col-xs-4">
             <div class="fau">
 <?php ($row->_field_data["nid"]["entity"]->gf_region_stock[$current_code]) ?
@@ -135,12 +93,9 @@ print str_ireplace(t('Add to cart'), '&#xf218;', $fields['addtocartlink']->conte
           <div class="col-md-9 col-sm-9 col-xs-8">
             <span class="amount"><?php print $symbol . round($curr_reg_price * $discount_coefficient); ?></span>
           </div>
+          <?php else: ?>
+            <?php print $not_avaible_text; ?>
           <?php endif; ?>
-              <?php if ($vote_enabled && !$is_gross) : ?>
-        <div class="col-md-12 col-sm-12 col-xs-6">
-          <span class="rating"><?php print $fields['field_votes']->content; ?></span>
-        </div>
-        <?php endif;?>
             </div>
         <?php endif; ?>
           </div>

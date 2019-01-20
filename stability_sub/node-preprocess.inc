@@ -43,8 +43,12 @@ function stability_sub_preprocess_node(&$variables) {
 
     $yuan_to_rub_rate = variable_get('gf_stock_yuan_exchange_rate');
 
+    // Расчет рекомендуемой розничной цены делаем на основе цены для российского склада.
+    // И для китайской цены тоже.(согласно инструкций от Сергея)
     $retail_price = ($price_ru) ? ($price_ru * GF_RETAIL_PRICE_COEFFICIENT) : 0;
-    $retail_price_cn = ($retail_price / $yuan_to_rub_rate);
+    // Если цены для рос. склада нет, то используем китайскую(указаний для
+    // такой ситуации не было, но совсем без РРЦ будет смотреться негармонично).
+    $retail_price_cn = $retail_price ? ($retail_price / $yuan_to_rub_rate) : ($price_cn * GF_RETAIL_PRICE_COEFFICIENT);
 
     if ($current_region == GF_STOCK_REGION_CN) {
       $order_price = $price_cn;
