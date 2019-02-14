@@ -105,7 +105,8 @@ if ($discount_percent) {
           <div class="col-md-3 col-sm-3 col-xs-4">
             <div class="fau">
               <?php ($row->_field_data["nid"]["entity"]->gf_region_stock[$current_code]) ?
-                print str_ireplace(t('Add to cart'), '&#xf218;', $fields['addtocartlink']->content): print '<span class="fa-stack"> <i class="fa fa-shopping-cart fa-stack-1x"></i><i class="fa fa-ban fa-stack-2x"></i></span>';
+                // print str_ireplace(t('Add to cart'), '&#xf218;', $fields['addtocartlink']->content): print '<span class="fa-stack"> <i class="fa fa-shopping-cart fa-stack-1x"></i><i class="fa fa-ban fa-stack-2x"></i></span>';
+                print str_ireplace(t('Add to cart'), '&#xf218;', $addtocartlink): print '<span class="fa-stack"> <i class="fa fa-shopping-cart fa-stack-1x"></i><i class="fa fa-ban fa-stack-2x"></i></span>';
               ?>
             </div>
           </div>

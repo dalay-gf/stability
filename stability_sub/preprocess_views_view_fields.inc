@@ -33,6 +33,13 @@ function stability_sub_preprocess_views_view_fields(&$vars) {
     $retail_price = round($ru_price * GF_RETAIL_PRICE_COEFFICIENT);
     $yuan_to_rub_rate = variable_get('gf_stock_yuan_exchange_rate', 1);
 
+
+    // Сылка на добавление в корзину(для замены ею формы с кнопкой, которая
+    // при включенном кэше вью работает некорректно).
+    $node = node_load($row->nid);
+    $addtocartlink = gf_custom_addtocart_link($node); 
+    $vars['addtocartlink'] = str_ireplace(t('Add to cart'), '&#xf218', $addtocartlink);
+
     $vars['seller_limited_access'] = $seller_limited_access;
     $vars['is_gross'] = $is_gross;
     $vars['is_wholesaler'] = $is_wholesaler;

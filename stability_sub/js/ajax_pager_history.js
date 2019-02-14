@@ -4,7 +4,8 @@
 
             // Заносим в историю бр-ра переходы по
             // ajax-ссылкам пейджера в каталоге.
-            $('.jquery-once-3-processed ul.pager a', context).each(function() {
+            // $(".jquery-once-2-processed ul.pager a, .jquery-once-3-processed ul.pager a", context).each(function() {
+            $("div[class*=' jquery-once-'] ul.pager a", context).each(function() {
                 var path = ($(this).attr('href').substr(0, 1) != '/') ?
                     '/' + $(this).attr('href') : $(this).attr('href');
                 $(this).click(function() {
