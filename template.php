@@ -4,20 +4,20 @@ function _stability_count_comments($val) {
   return isset($val['#comment']);
 }
 
-function _get_node_field($node, $field, $lang = 'en') {
-  global $language;
-  $var = FALSE;
-  if(isset($node->{$field}[$lang]) && !empty($node->{$field}[$lang])) {
-      $var = $node->{$field}[$lang];
-  } elseif(isset($node->{$field}[$language->language]) && !empty($node->{$field}[$language->language])) {
-      $var = $node->{$field}[$language->language];
-  } elseif(isset($node->{$field}['und']) && !empty($node->{$field}['und'])) {
-      $var = $node->{$field}['und'];
-  } elseif(isset($node->{$field}) && !empty($node->{$field})) {
-      $var = $node->{$field};
-  }
-  return $var;
-}
+// function _get_node_field($node, $field, $lang = 'en') {
+//   global $language;
+//   $var = FALSE;
+//   if(isset($node->{$field}[$lang]) && !empty($node->{$field}[$lang])) {
+//       $var = $node->{$field}[$lang];
+//   } elseif(isset($node->{$field}[$language->language]) && !empty($node->{$field}[$language->language])) {
+//       $var = $node->{$field}[$language->language];
+//   } elseif(isset($node->{$field}['und']) && !empty($node->{$field}['und'])) {
+//       $var = $node->{$field}['und'];
+//   } elseif(isset($node->{$field}) && !empty($node->{$field})) {
+//       $var = $node->{$field};
+//   }
+//   return $var;
+// }
 
 /**
  * Implementation of hook_preprocess_html().
