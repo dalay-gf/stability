@@ -1,7 +1,7 @@
 <?php
 
 // Коэффициент для расцета цен, рекомендуемых для розницы.
-define('GF_RETAIL_PRICE_COEFFICIENT', 2.5);
+// define('GF_RETAIL_PRICE_COEFFICIENT', 2.5);
 
 /**
  * Replacement for theme_webform_element().
